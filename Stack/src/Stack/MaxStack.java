@@ -1,3 +1,4 @@
+package Stack;
 //最大栈链表实现
 public class MaxStack {
 	//定义双向链表

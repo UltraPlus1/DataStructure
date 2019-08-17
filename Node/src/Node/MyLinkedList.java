@@ -1,66 +1,122 @@
+package Node;
 public class MyLinkedList {
 	private  class Node{
 		int val;
 		Node next;
 		Node(int val){
 			this.val = val;
+			this.next = null;
 		}
 	}
-	private Node head;
+	private Node head,tail;
 	private int size;
-	/** Initialize your data structure here. */
+
+	/**
+	 * 链表构造函数
+	 */
 	public MyLinkedList() {
-		this.head = new Node(0);
+		Node p= new Node(0);
+		this.head = p;
+		this.tail = p;
 		this.size = 0;
 	}
 
-	/** Get the value of the index-th node in the linked list. If the index is invalid, return -1. */
+	/**
+	 *获取链表中第 index 个节点的值。
+	 * @param index 索引
+	 * @return 索引为index 对应的值 无效返回-1
+	 */
 	public int get(int index) {
-
-	}
-
-	/** Add a node of value val before the first element of the linked list. After the insertion, the new node will be the first node of the linked list. */
-	public void addAtHead(int val) {
-		Node tmp = head.next;
-		head.next=new Node(val);
-		head.next.next = tmp;
-		this.size +=1;
-	}
-
-	/** Append a node of value val to the last element of the linked list. */
-	public void addAtTail(int val) {
-		Node cur = this.head;
-		while (cur.next!=null){
-			cur = cur.next;
-		}
-			cur.next = new Node(val);
-			cur.next.next = null;
-	}
-
-	/** Add a node of value val before the index-th node in the linked list. If index equals to the length of linked list, the node will be appended to the end of linked list. If index is greater than the length, the node will not be inserted. */
-	public void addAtIndex(int index, int val) {
-		Node cur = this.head.next;
-		int i;
-		if(index<=0){
-			addAtHead(val);
-		}else if(index>0&&index<size){
-			for(i=0;i<index;i++){
-				cur = cur.next;
+		//如果超出范围直接返回-1
+		if(index<0||index>=this.size) return -1;
+		else{
+			Node cur = this.head;
+			for(int i =0 ;i<index;i++){
+				cur= cur.next;
 			}
-			Node tmp = cur.next;
-			cur.next= new Node(val);
-			cur.next.next = tmp;
-			this.size +=1;
-		}else if(index==size){
-			addAtTail(val);
+			return cur.val;
 		}
 	}
 
-	/** Delete the index-th node in the linked list, if the index is valid. */
-	public void deleteAtIndex(int index) {
-		Node cur = this.head.next;
-		for(int i =0 ;i<index;i++){
+	/**
+	 * 在链表的第一个元素之前添加一个值为 val 的节点。
+	 * @param val
+	 */
+	public void addAtHead(int val) {
+		if(this.size==0){
+			this.head.val = val;
+		}else{
+			Node tmp = new Node(val);
+			tmp.next = this.head;
+			this.head = tmp;//加了之后要更新head 的值
+		}
+		this.size ++;
+	}
 
+	/**
+	 * 将值为 val 的节点追加到链表的最后一个元素。
+	 * @param val
+	 */
+	public void addAtTail(int val) {
+		if(this.size==0){
+			this.tail.val = val;
+		}else {
+			Node tmp = new Node(val);
+			this.tail.next = tmp;
+			this.tail = tmp;//加了之后要更新tail的值
+		}
+		this.size++;
+	}
+
+	/**
+	 * 在链表中的第 index 个节点之前添加值为 val  的节点。
+	 * 如果 index 等于链表的长度，则该节点将附加到链表的末尾。
+	 * 如果 index 大于链表长度，则不会插入节点。如果index小于0，则在头部插入节点。
+	 * @param index
+	 * @param val
+	 */
+	public void addAtIndex(int index, int val) {
+		if(index>this.size){//超出范围结束
+			return;
+		}else if(index<=0){//比零小，加在head
+			addAtHead(val);
+		}else if(index==this.size){//index为size说明实在tail之后加
+			addAtTail(val);
+		}else {
+			Node tmp = new Node(val);
+			Node cur = this.head;
+			for(int i=0;i<index-1;i++){
+				cur = cur.next;
+			}//加的位置是cur的下一个
+			tmp.next = cur.next;
+			cur.next = tmp;
+			this.size ++;//别忘记加size
+		}
+	}
+
+	/**
+	 * deleteAtIndex(index)：如果索引 index 有效，则删除链表中的第 index 个节点。
+	 * @param index
+	 */
+	public void deleteAtIndex(int index) {
+		if(index>=0&&index<this.size)//索引有效才能删
+		{
+			if(index==0)//删head
+			{
+				this.head = this.head.next;
+			}else
+			{
+				Node cur = this.head;
+				for(int i=0;i<index-1;i++)
+				{
+					cur = cur.next;
+				}
+				cur.next = cur.next.next;
+				if(index==this.size-1){
+					tail=cur;
+				}//删tail 要更新tail
+			}
+			this.size--;//别忘记了减size
 		}
 	}
 }
